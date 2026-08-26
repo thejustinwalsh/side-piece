@@ -13,6 +13,8 @@ Route external-model work through the project's `side-piece` MCP server. Do not 
 
 Every run is resumable. Start it with `run`, retain the returned PID, use `peek` only for a bounded progress sample, use `wait` or `get_result` for the authoritative outcome, and resume with the returned `session_id` when a provider fails or the user asks for another pass. A one-off task is still started in the background; `wait` immediately afterward is the blocking recipe.
 
+**Prefer resuming over starting fresh.** A new run re-sends and re-bills the whole context; a resumed session lands on the provider's cached conversation and keeps the model's own prior reasoning, which is what makes a targeted challenge like *push back on point three* work. Start fresh only when the commit, worktree, or task actually changed, and say why.
+
 Use the `side-piece` command for everything documented here. It is the stable surface; the server underneath it is an implementation detail that can be replaced.
 
 ## Setup and health check

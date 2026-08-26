@@ -57,7 +57,7 @@ Everything the project needs is in the project; `node_modules` only supplies the
 2. Confirm the tools are live — ask your agent to list its MCP tools, or run `npx side-piece doctor`.
 3. Ask for a review in plain language: *"have opus review this diff adversarially and cite file and line for every claim."*
 4. Your agent resolves the model against the live catalog, starts a background run in an isolated worktree, and hands you back a PID and a session ID.
-5. Ask for another pass whenever you want — *"push back on point 3"* — and it resumes that same session instead of starting over.
+5. Ask for another pass whenever you want — *"push back on point 3"* — and it resumes that same session instead of starting over. That matters for the bill: a fresh run re-sends the whole context and you pay for it twice, while a resumed one continues a conversation the provider already has cached.
 
 Reviews get a clean worktree and no permission to write to yours. The wrapper bypasses provider permission prompts, so that isolation is the safety boundary, not a setting you can rely on.
 

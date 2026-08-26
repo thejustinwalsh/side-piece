@@ -129,8 +129,8 @@ ask mimo to try the migration in a worktree</code></pre>
     <dt>Which models can it reach?</dt>
     <dd>Whichever CLIs you already have installed and signed in — <code>claude</code>, <code>codex</code>, <code>gemini</code>, <code>opencode</code>. side-piece runs those binaries on your machine, as you, spending the subscriptions you already pay for. Nothing new to sign up for and no API keys to paste.</dd>
 
-    <dt>What if a run fails, or I close the client?</dt>
-    <dd>Nothing is lost. Every delegated run is a background job with a session ID. A provider that falls over is resumed where it stopped rather than restarted, and a long review outlives a disconnected client — come back later and the result is waiting. Say <em>push back on point three</em> and it continues the same session instead of starting a new one.</dd>
+    <dt>Why does it resume instead of starting over?</dt>
+    <dd>Cost. A follow-up continues the conversation the provider already has cached instead of re-sending it, so you pay for the follow-up rather than the whole review twice. Say <em>push back on point three</em> and it still knows what point three was.</dd>
 
     <dt>Does my code go anywhere new?</dt>
     <dd>No. It goes exactly where it already goes when you run those CLIs yourself. side-piece is a router, not a service — there is nothing in between.</dd>
