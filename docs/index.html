@@ -108,6 +108,13 @@ footer{
     <button id="c" aria-label="Copy prompt to clipboard">Copy</button>
   </div>
 
+  <h2>Then ask for a model by name</h2>
+  <pre><code>have opus review this diff adversarially
+
+get a second opinion from sol on the cache invalidation
+
+ask mimo to try the migration in a worktree</code></pre>
+
   <h2>Works in</h2>
   <div class="grid">
     <div>Claude Code<span>.claude/skills</span></div>
@@ -115,15 +122,7 @@ footer{
     <div>opencode<span>.agents/skills</span></div>
   </div>
 
-  <h2>Then ask for a model by name</h2>
-  <pre><code>have opus review this diff adversarially
 
-get a second opinion from sol on the cache invalidation
-
-ask mimo to try the migration in a worktree</code></pre>
-  <p>Say the short name — <code>opus</code>, <code>sol</code>, <code>mimo</code> — and the skill checks the live catalog and resolves it to whatever that provider actually calls it today. Ask for something that is not there and it tells you, rather than quietly picking something else.</p>
-
-  <p>Every delegated run is a background job with a session you can return to. A provider that falls over is resumed, not restarted. A long review outlives a disconnected client. Reviews get their own worktree and no permission to write to yours.</p>
 
   <h2>Questions</h2>
   <dl>
