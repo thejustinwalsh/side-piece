@@ -1,6 +1,6 @@
 ---
 name: side-piece
-description: Route resumable external-model work through the pinned side-piece MCP server. Use for adversarial reviews, implementation reviews, research, and one-off delegated tasks when the user names Claude, Opus, Fable, Sonnet, Haiku, Codex, GPT-5, Sol, Terra, Luna, Gemini, Forge, OpenCode, or asks for an external model, a second opinion, or a review by another agent.
+description: Route resumable external-model work through the pinned side-piece MCP server. Use for adversarial reviews, implementation reviews, research, and one-off delegated tasks when the user names Claude, Opus, Fable, Sonnet, Haiku, Codex, GPT-5, Sol, Terra, Luna, Spark, Gemini, Forge, OpenCode, or asks for an external model, a second opinion, or a review by another agent.
 license: MIT
 metadata:
   package: "@tjw.dev/side-piece"
@@ -67,10 +67,13 @@ The fall-through rule makes step 3 non-negotiable: an unrecognized name is not r
 | User says | Resolves to | Rule |
 | --- | --- | --- |
 | `opus`, `sonnet`, `haiku` | itself | Already a catalog name. `reasoning_effort: high`. |
+| `sonnet 1m`, `long context` | `sonnet[1m]` | Claude. The brackets are part of the name. |
+| `spark` | `gpt-5.3-codex-spark` | Codex. Fast tier; do not confuse with `gpt-5.3-codex`. |
+| `opusplan`, `plan with opus` | `opusplan` | Claude. Opus plans, a cheaper model executes. |
 | `fable` | `fable` | Explicit request only, never auto-selected. May require usage credits. |
 | `sol`, `terra`, `luna` | the `gpt-5.6-*` entry containing that word | Codex. `terra` has two `r`s; accept `tera` as a typo for it. |
 | `mimo`, `nemotron`, `pickle`, … | the unique `opencode/*` match, prefixed `oc-` | See below. Omit `reasoning_effort`. |
-| `ultra`, `max effort`, `hardest` | the matching `*-ultra` alias | The alias sets its own effort; do not also pass `reasoning_effort`. |
+| `ultra`, `max effort`, `hardest` | the matching `*-ultra` alias | The alias sets its own effort; do not also pass `reasoning_effort`. **Confirm before running — see Effort.** |
 | `claude:<model>`, `codex:<model>` | the suffix | Validate the suffix against the catalog. |
 
 Naming a model always beats the router's own preference. Report an unavailable route rather than substituting one.
@@ -87,9 +90,27 @@ Then translate the provider-native identifier by prefixing `oc-`: a user asking 
 
 ### Effort
 
-Every Claude and Codex route defaults to `reasoning_effort: high`. Use a higher tier only when the user explicitly requests it; choosing an expensive model or asking for a difficult review does not imply it.
+Default every Claude and Codex route to `reasoning_effort: high`. That is the highest tier the router selects on its own, for any model, on any task.
 
-Accepted values are provider- and model-specific, and the server rejects anything outside them:
+#### Above `high`, stop and confirm
+
+**Never start a run above `high` without a second, explicit confirmation from the user.** This covers `xhigh`, `max`, `ultra`, and every `*-ultra` alias — the aliases set `max` or `ultra` themselves, so choosing one crosses this line even though no effort field was written.
+
+Before such a run, state the model, the exact tier, and why it is warranted. Then wait for a direct answer. Treat the following as **not** confirmation:
+
+- the user naming an expensive or flagship model;
+- the task being hard, large, security-sensitive, or important;
+- encouragement like *be thorough*, *do your best*, *take your time*, *really dig in*;
+- an approval given earlier in the session for a different run;
+- your own judgement that the result would be better.
+
+A request phrased as *"use ultra"* is the **first** signal, not the confirmation. Read it back — *"that is Opus at max effort, which costs materially more than high; confirm?"* — and wait. One confirmation authorises one run. A resumed session at the same tier is a new run and needs its own.
+
+If the user declines or does not answer, run at `high` and say that is what you did.
+
+#### Accepted values
+
+Tiers are provider- and model-specific, and the server rejects anything outside them:
 
 | Provider | Accepted `reasoning_effort` |
 | --- | --- |
@@ -99,7 +120,7 @@ Accepted values are provider- and model-specific, and the server rejects anythin
 | Codex `gpt-5.6-sol`, `gpt-5.6-terra` | additionally `ultra` |
 | Gemini, Forge, OpenCode | omit the field |
 
-Selecting a `*-ultra` alias is itself the explicit high-effort request, so do not pass `reasoning_effort` alongside one. Never substitute or silently retry at a different tier when a requested one is rejected; report the rejection and the accepted set.
+Never substitute or silently retry at a different tier when a requested one is rejected; report the rejection and the accepted set. Lowering effort below `high` needs no confirmation, but say that you did it.
 
 ## Review recipe
 

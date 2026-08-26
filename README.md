@@ -70,13 +70,16 @@ Say the short name. Resolving it is the skill's job — it checks the live catal
 | `opus`, `sonnet`, `haiku` | Claude, at high reasoning effort |
 | `fable` | Claude Fable — explicit only, never auto-chosen, may need credits |
 | `sol`, `terra`, `luna` | the matching Codex 5.6 model |
+| `spark` | Codex's fast tier |
 | `gemini` | Gemini |
 | `mimo`, `nemotron`, `pickle` | the matching OpenCode model |
-| `ultra`, `hardest`, `max effort` | the top tier for whichever provider you picked |
+| `ultra`, `hardest`, `max effort` | the top tier — your agent will read it back and ask you to confirm first |
 
 Those OpenCode names are examples, not a fixed list — that catalog rotates, so the skill discovers it at routing time rather than trusting anything written here. Run `npx side-piece models` to see what is live.
 
 Naming a model always beats the skill's own preference. Ask for something the catalog does not have and it says so, rather than quietly substituting.
+
+Runs default to high reasoning effort. Anything above that costs materially more, so the skill will not start one without reading the tier back to you and waiting for a yes — and saying *be thorough* or naming a flagship model does not count as that yes.
 
 Useful shapes:
 

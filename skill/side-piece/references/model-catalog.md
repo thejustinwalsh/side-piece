@@ -18,7 +18,7 @@ Three aliases resolve to a model *and* an effort in one step:
 | `codex-ultra` | `gpt-5.6-sol` | codex | `ultra` |
 | `gemini-ultra` | `gemini-3.1-pro-preview` | gemini | — |
 
-`claude-ultra` does not select Fable. Because an alias carries its own effort, passing `reasoning_effort` alongside one is redundant at best and a conflicting request at worst.
+`claude-ultra` does not select Fable. All three aliases cross the confirmation threshold, because each sets its own effort at or above `max`. Because an alias carries its own effort, passing `reasoning_effort` alongside one is redundant at best and a conflicting request at worst.
 
 ## Effort ceilings
 
@@ -30,7 +30,7 @@ Reasoning is provider- and model-specific, and the server validates it:
 - Codex additionally accepts `ultra` for `gpt-5.6-sol` and `gpt-5.6-terra` only. `gpt-5.6-luna` stops at `max`.
 - Gemini, Forge, and OpenCode take no `reasoning_effort` through this integration.
 
-Router policy defaults every Claude and Codex route to `high`. A higher tier is valid only when the user explicitly requests that effort and the selected model accepts it; model choice alone never raises effort.
+Router policy defaults every Claude and Codex route to `high`. Any tier above `high` — `xhigh`, `max`, `ultra`, or a `*-ultra` alias — requires an explicit second confirmation from the user before the run starts, and one confirmation authorises one run. Model choice, task difficulty, and encouragement to be thorough never raise effort on their own. See the Effort section of SKILL.md for the full rule.
 
 ## Fable
 
