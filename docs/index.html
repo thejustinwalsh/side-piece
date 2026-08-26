@@ -172,7 +172,7 @@ ask mimo to try the migration in a worktree</code></pre>
   <h2>Questions</h2>
   <dl>
     <dt>What is this?</dt>
-    <dd>A skill wrapper around <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a>, which does the real work — provider CLIs as tracked, resumable background jobs. side-piece pins it, wires it into all three clients, and teaches your agent when to reach for it. It leaves one skill in <code>.agents/skills/side-piece</code>, a link where Claude Code looks for it, and a <code>side-piece</code> MCP entry per client. All committed; only the pinned server lives in <code>node_modules</code>.</dd>
+    <dd>A convenience skill wrapper around <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> — mkXultra's excellent server, which does the actual work. side-piece pins it, wires it into all three clients, and ships the skill that decides when to use it. What lands: one skill in <code>.agents/skills/side-piece</code>, a link where Claude Code looks for it, and a <code>side-piece</code> MCP entry per client — all committed. Only the pinned server sits in <code>node_modules</code>.</dd>
 
     <dt>Which models can it reach?</dt>
     <dd>Whichever CLIs you already have installed and signed in — <code>claude</code>, <code>codex</code>, <code>gemini</code>, <code>opencode</code>. side-piece runs those binaries on your machine, as you, spending the subscriptions you already pay for. Nothing new to sign up for and no API keys to paste.</dd>
