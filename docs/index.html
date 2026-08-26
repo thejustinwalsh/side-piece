@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>side-piece</title>
-<meta name="description" content="The other model, on the side. A pinned ai-cli-mcp skill for Claude Code, Codex, and opencode.">
+<meta name="description" content="The other model, on the side. Hand work to a different model using the CLIs already on your machine. For Claude Code, Codex, and opencode.">
 <meta property="og:title" content="side-piece">
-<meta property="og:description" content="The other model, on the side. Give your coding agent a second opinion.">
+<meta property="og:description" content="Your coding agent is good. It is also the only opinion in the room.">
 <meta property="og:url" content="https://tjw.dev/side-piece">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>🂡</text></svg>">
 <style>
@@ -39,7 +39,7 @@ h1{
 }
 h1 .suit{color:var(--accent)}
 .tag{color:var(--dim);font-size:1.125rem;margin:.4rem 0 0}
-.lede{margin:2rem 0 0;font-size:1.0625rem}
+.lede{margin:2.25rem 0 1rem;font-size:1.1875rem;line-height:1.5;letter-spacing:-.01em}
 .lede em{color:var(--fg);font-style:italic}
 h2{
   font-family:var(--mono);font-size:.8125rem;font-weight:600;text-transform:uppercase;
@@ -97,7 +97,9 @@ footer{
   <h1>side<span class="suit">·</span>piece</h1>
   <p class="tag">The other model, on the side.</p>
 
-  <p class="lede">Your coding agent is good. It is also the <em>only</em> opinion in the room. <strong>side-piece</strong> teaches it to hand work to a different model — a review, a migration, a second read on the thing you are not sure about — and collect the answer without losing its place.</p>
+  <p class="lede">Your coding agent is good. It is also the only opinion in the room.</p>
+  <p><strong>side-piece</strong> hands work to a different model — a review, a migration, a second read on the thing you are not sure about — and brings the answer back.</p>
+  <p>It drives the CLIs already on your machine. Your logins, your subscriptions, your terminal. Runs locally, resumes cleanly, and there is nothing new to sign up for.</p>
 
   <h2>Install</h2>
   <p>From inside your project, give your coding agent this prompt:</p>
@@ -105,7 +107,7 @@ footer{
     <code id="p">Let's install `@tjw.dev/side-piece` in this project, then tell me how to use it</code>
     <button id="c" aria-label="Copy prompt to clipboard">Copy</button>
   </div>
-  <p class="hint">That is the whole thing. It installs the package, wires up whichever client it is running in, and walks you through the first run.</p>
+  <p class="hint">That is the whole thing. Your agent installs it, wires up whichever client it is running in, and walks you through the first run.</p>
 
   <h2>Works in</h2>
   <div class="grid">
@@ -113,32 +115,37 @@ footer{
     <div>Codex<span>.agents/skills</span></div>
     <div>opencode<span>.agents/skills</span></div>
   </div>
-  <p>One skill, three clients. The install detects which one it is running inside and merges into whatever config is already there — it never replaces your other MCP servers.</p>
+  <p>One skill, three clients. It merges into the config you already have and leaves your other MCP servers alone.</p>
 
   <h2>Then ask for a model by name</h2>
   <pre><code>have opus review this diff adversarially
 
-get a second opinion from gpt-5.6-sol on the cache invalidation
+get a second opinion from sol on the cache invalidation
 
-ask 0x alpha to try the migration in a worktree</code></pre>
-  <p>Every delegated run is a background job with a PID and a session ID. A provider that falls over is <em>resumed</em>, not restarted. A long review outlives a disconnected client. Reviews get an isolated worktree and no permission to write to yours.</p>
+ask mimo to try the migration in a worktree</code></pre>
+  <p>Say the short name — <code>opus</code>, <code>sol</code>, <code>mimo</code> — and the skill checks the live catalog and resolves it to whatever that provider actually calls it today. Ask for something that is not there and it tells you, rather than quietly picking something else.</p>
+
+  <p>Every delegated run is a background job with a session you can return to. A provider that falls over is resumed, not restarted. A long review outlives a disconnected client. Reviews get their own worktree and no permission to write to yours.</p>
 
   <h2>Questions</h2>
   <dl>
-    <dt>What is actually installed?</dt>
-    <dd>One skill in <code>.agents/skills/side-piece</code>, a symlink where Claude Code looks for it, an <code>ai-cli</code> MCP entry per client, and a pinned <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> in <code>node_modules</code>. Everything but the binary is committed to your repo.</dd>
-
     <dt>Which models can it reach?</dt>
-    <dd>Whatever your host has installed and signed in — Claude, Codex, Gemini, OpenCode, Forge. The skill queries the live catalog before routing, so it never invents a model name.</dd>
+    <dd>Whichever CLIs you already have installed and signed in — <code>claude</code>, <code>codex</code>, <code>gemini</code>, <code>opencode</code>. side-piece runs those binaries on your machine, as you, spending the subscriptions you already pay for. Nothing new to sign up for and no API keys to paste.</dd>
 
-    <dt>Does it send my code anywhere new?</dt>
-    <dd>Only to the provider CLIs you already have installed and authenticated. It runs them locally; there is no service in between and no account to make.</dd>
+    <dt>Does my code go anywhere new?</dt>
+    <dd>No. It goes exactly where it already goes when you run those CLIs yourself. side-piece is a router, not a service — there is nothing in between.</dd>
+
+    <dt>What lands in my project?</dt>
+    <dd>One skill in <code>.agents/skills/side-piece</code>, a link where Claude Code looks for it, and an <code>ai-cli</code> entry in each client's MCP config. All committed. The only thing in <code>node_modules</code> is the pinned <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> server.</dd>
+
+    <dt>Will it pick a model I did not ask for?</dt>
+    <dd>Never. It checks the live catalog before routing, so it cannot invent a name, and naming a model always beats its own preference. Ask for something that is not there and it says so.</dd>
 
     <dt>Is the version pinned?</dt>
-    <dd>Exactly. The server version lives in one <code>package.json</code> and nowhere else, so it cannot drift out from under a config file.</dd>
+    <dd>To the patch. The server version lives in one <code>package.json</code> and nowhere else, so it cannot drift out from under a config file.</dd>
 
     <dt>Do I have to use the prompt?</dt>
-    <dd>No. <code>npm i -D @tjw.dev/side-piece &amp;&amp; npx side-piece install</code> does the same thing, and the <a href="https://github.com/thejustinwalsh/side-piece#manual-setup">README</a> documents placing every file by hand.</dd>
+    <dd>No. <code>npm i -D @tjw.dev/side-piece &amp;&amp; npx side-piece install</code> does the same work, and the <a href="https://github.com/thejustinwalsh/side-piece#manual-setup">README</a> shows how to place every file by hand.</dd>
   </dl>
 
   <footer>

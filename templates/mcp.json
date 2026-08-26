@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "ai-cli": {
+    "side-piece": {
       "command": "mise",
-      "args": ["exec", "--", "pnpm", "exec", "ai-cli-mcp"],
+      "args": ["exec", "--", "pnpm", "exec", "side-piece-mcp"],
       "env": {
         "MCP_CLAUDE_DEBUG": "false"
       }

@@ -1,10 +1,10 @@
-# ai-cli model catalog
+# Reading the model catalog
 
-The router does not own a permanent copy of provider availability. Query `models` at the start of a run and treat this page as the interpretation of the `ai-cli-mcp@2.22.0` response shape.
+The router does not own a permanent copy of provider availability. Query `models` at the start of a run and treat this page as the interpretation of the catalog response shape.
 
 ## Naming
 
-`ai-cli` uses direct names for Claude, Codex, and Gemini. `forge` is a provider key rather than a model-family selector. OpenCode has a configured-default name, `opencode`, and dynamic explicit names carrying the `oc-` prefix. The provider-native `opencode/x-preview-f-free` therefore becomes `oc-opencode/x-preview-f-free` at the `ai-cli` boundary; the prefix is required and the pattern is exact, so a malformed value is rejected rather than coerced.
+The router uses direct names for Claude, Codex, and Gemini. `forge` is a provider key rather than a model-family selector. OpenCode has a configured-default name, `opencode`, and dynamic explicit names carrying the `oc-` prefix. The provider-native `opencode/x-preview-f-free` therefore becomes `oc-opencode/x-preview-f-free` at the router boundary; the prefix is required and the pattern is exact, so a malformed value is rejected rather than coerced.
 
 Model names route to providers by prefix: anything starting with `gpt-` is Codex, anything starting with `gemini` is Gemini, `forge` is Forge, `opencode`/`oc-` is OpenCode, and everything else falls through to Claude. That fall-through is why an unvalidated typo silently becomes a Claude request — check the catalog before routing.
 

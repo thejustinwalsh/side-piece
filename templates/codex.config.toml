@@ -6,11 +6,11 @@ sandbox_mode = "workspace-write"
 [sandbox_workspace_write]
 network_access = true
 
-[mcp_servers.ai-cli]
+[mcp_servers.side-piece]
 command = "mise"
-args = ["exec", "--", "pnpm", "exec", "ai-cli-mcp"]
+args = ["exec", "--", "pnpm", "exec", "side-piece-mcp"]
 startup_timeout_sec = 20
 tool_timeout_sec = 3600
 
-[mcp_servers.ai-cli.env]
+[mcp_servers.side-piece.env]
 MCP_CLAUDE_DEBUG = "false"

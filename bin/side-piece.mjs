@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline/promises';
 
 const SKILL = 'side-piece';
-const SERVER = 'ai-cli';
+const SERVER = 'side-piece';
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CLIENTS = ['claude', 'codex', 'opencode'];
 
@@ -51,12 +51,12 @@ function detectRunner(root) {
   const mise = has('mise.toml') || has('.mise.toml');
   if (has('pnpm-lock.yaml') || has('pnpm-workspace.yaml')) {
     return mise
-      ? { command: 'mise', args: ['exec', '--', 'pnpm', 'exec', 'ai-cli-mcp'] }
-      : { command: 'pnpm', args: ['exec', 'ai-cli-mcp'] };
+      ? { command: 'mise', args: ['exec', '--', 'pnpm', 'exec', 'side-piece-mcp'] }
+      : { command: 'pnpm', args: ['exec', 'side-piece-mcp'] };
   }
-  if (has('yarn.lock')) return { command: 'yarn', args: ['exec', 'ai-cli-mcp'] };
-  if (has('bun.lockb') || has('bun.lock')) return { command: 'bun', args: ['x', 'ai-cli-mcp'] };
-  return { command: 'npx', args: ['ai-cli-mcp'] };
+  if (has('yarn.lock')) return { command: 'yarn', args: ['exec', 'side-piece-mcp'] };
+  if (has('bun.lockb') || has('bun.lock')) return { command: 'bun', args: ['x', 'side-piece-mcp'] };
+  return { command: 'npx', args: ['side-piece-mcp'] };
 }
 
 function findProjectRoot(start) {
@@ -244,9 +244,26 @@ async function doctor(root) {
   return lines.every((line) => line.includes('ok  '));
 }
 
+// --------------------------------------------------------------- passthrough
+
+// Everything the skill and README tell people to run goes through here, so the
+// underlying server is an implementation detail we can replace without
+// invalidating a single documented command.
+const FORWARDED = new Set(['models', 'run', 'wait', 'result', 'peek', 'ps', 'kill', 'providers', 'exec']);
+const RENAMED = { providers: 'doctor', ps: 'list', kill: 'kill' };
+
+async function forward(command, rest) {
+  const { runBin, resolveBin } = await import('./resolve.mjs');
+  const argv = command === 'exec' ? rest : [RENAMED[command] ?? command, ...rest];
+  const { href } = resolveBin('ai-cli');
+  process.argv = [process.argv[0], new URL(href).pathname, ...argv];
+  await runBin('ai-cli');
+}
+
 // ---------------------------------------------------------------------- cli
 
 function parseArgs(argv) {
+  if (FORWARDED.has(argv[0])) return { command: argv[0], clients: [], dryRun: false, force: false, dir: process.cwd() };
   const options = { command: argv[0] ?? 'help', clients: [], dryRun: false, force: false, dir: process.cwd() };
   for (let index = 1; index < argv.length; index += 1) {
     const argument = argv[index];
@@ -261,9 +278,20 @@ function parseArgs(argv) {
 
 const HELP = `side-piece — the other model, on the side.
 
+Setup
   side-piece install [options]   place the skill and wire up MCP config
-  side-piece doctor  [options]   verify placement and every client entry
-  side-piece help                this message
+  side-piece doctor              verify placement and every client entry
+
+Routing
+  side-piece models              the routing catalog — check before choosing
+  side-piece providers           which provider CLIs are on PATH
+  side-piece run <args...>       start a background run
+  side-piece wait <pid>          block until a run finishes
+  side-piece result <pid>        the authoritative result
+  side-piece peek <pid>          a bounded progress sample
+  side-piece ps                  runs this host still tracks
+  side-piece kill <pid>          cancel a run
+  side-piece exec <args...>      anything else, forwarded verbatim
 
 Options
   -c, --client <c[,c]>   claude | codex | opencode | all (default: detected)
@@ -315,6 +343,10 @@ async function main() {
   const root = findProjectRoot(options.dir);
   if (!root) throw new Error(`no project root at or above ${options.dir} (looked for package.json or .git)`);
 
+  if (FORWARDED.has(options.command)) {
+    await forward(options.command, process.argv.slice(3));
+    return 0;
+  }
   if (options.command === 'doctor') return (await doctor(root)) ? 0 : 1;
   if (options.command !== 'install') throw new Error(`unknown command: ${options.command}`);
 

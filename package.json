@@ -28,6 +28,7 @@
   },
   "bin": {
     "side-piece": "bin/side-piece.mjs",
+    "side-piece-mcp": "bin/mcp.mjs",
     "ai-cli-mcp": "bin/mcp.mjs",
     "ai-cli": "bin/cli.mjs"
   },

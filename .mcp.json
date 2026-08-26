@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "ai-cli": {
+    "side-piece": {
       "command": "npx",
-      "args": ["ai-cli-mcp"],
+      "args": ["side-piece-mcp"],
       "env": {
         "MCP_CLAUDE_DEBUG": "false"
       }

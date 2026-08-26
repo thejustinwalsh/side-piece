@@ -1,9 +1,9 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "ai-cli": {
+    "side-piece": {
       "type": "local",
-      "command": ["npx", "ai-cli-mcp"],
+      "command": ["npx", "side-piece-mcp"],
       "enabled": true,
       "environment": {
         "MCP_CLAUDE_DEBUG": "false"
