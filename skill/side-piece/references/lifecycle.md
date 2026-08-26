@@ -4,7 +4,7 @@
 
 Use `peek` as an observation window, not as a log reader. It can miss events between calls and deliberately omits raw command output. Use `wait` for one or more PIDs when coordinating a batch, then use `get_result` with `verbose: true` when metadata or the full parsed result is needed.
 
-Resuming is the default, not the recovery path. Re-running from scratch re-sends and re-bills the entire context, while a resumed session lands on the provider's cached conversation — cheaper, faster, and still carrying the model's own reasoning. Start fresh only when the commit, worktree, or task actually changed.
+Resuming is not only failure recovery — it is how a follow-up avoids re-billing the whole context. But the cached history is re-sent every turn, so it is an economy only while it stays relevant. Continue a session for the same thread against the same target; open a new one when the commit, worktree, or kind of work changed. A session carrying history unrelated to the question is both worse and more expensive than a fresh one.
 
 Resume by passing the returned `session_id` back to `run`. For OpenCode this is an in-place `--session` resume; for Claude and Codex it maps to their provider-specific resume flags. Keep the same model and worktree unless the new prompt explicitly records why either changed.
 

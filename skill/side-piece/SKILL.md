@@ -13,7 +13,13 @@ Route external-model work through the project's `side-piece` MCP server. Do not 
 
 Every run is resumable. Start it with `run`, retain the returned PID, use `peek` only for a bounded progress sample, use `wait` or `get_result` for the authoritative outcome, and resume with the returned `session_id` when a provider fails or the user asks for another pass. A one-off task is still started in the background; `wait` immediately afterward is the blocking recipe.
 
-**Prefer resuming over starting fresh.** A new run re-sends and re-bills the whole context; a resumed session lands on the provider's cached conversation and keeps the model's own prior reasoning, which is what makes a targeted challenge like *push back on point three* work. Start fresh only when the commit, worktree, or task actually changed, and say why.
+**Resume a thread. Start a new session for new work.** A resumed session lands on the provider's cached conversation, so a follow-up is billed as a follow-up instead of a second full review. That history is re-sent on every turn, though, so resuming only pays when the history is relevant.
+
+Resume when the prompt continues the same thread against the same target commit and worktree — challenging, correcting, or extending what that session already said. *Push back on point three.* *You missed the error path.* *Go deeper on the cache logic.*
+
+Start fresh when the target commit or worktree changed, when it is a different kind of task, or when the prior history has nothing to do with the new question. Do not reuse a review session for an implementation, and do not ask a stale session about a different checkout.
+
+When it is genuinely unclear, ask. A wrongly resumed session is worse than a fresh one: it answers from stale context and charges for carrying it.
 
 Use the `side-piece` command for everything documented here. It is the stable surface; the server underneath it is an implementation detail that can be replaced.
 
