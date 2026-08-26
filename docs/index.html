@@ -38,15 +38,16 @@ body{
   font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 main{max-width:44rem;margin:0 auto;padding:clamp(3rem,10vw,6rem) 1.5rem 5rem}
-/* M3v: the mark is sized to the two-line text block. Its height is stated
-   explicitly rather than stretched — align-self:stretch plus aspect-ratio is
-   circular in a flex row, since the width it derives grows the row that sizes
-   it. 1.62em of the title's own clamp is the measured block height
-   (title line-box + gap + tagline line-box), so the two scale together. */
+/* M3v: the mark spans the title's cap-line to the tagline's baseline — the
+   typographic edges, not the line boxes, which overshot by 2.83px at the top
+   and hung 5.08px below the bottom. Height is stated rather than stretched:
+   align-self:stretch plus aspect-ratio is circular in a flex row, since the
+   width it derives grows the row that sizes it. Both type sizes come from one
+   clamp, so these ratios hold at every viewport. */
 .brand{display:flex;align-items:flex-start;gap:.85rem}
 .brand .mark{
   flex:none;font-size:clamp(2rem,7vw,2.75rem);
-  height:1.62em;aspect-ratio:16/18;
+  height:1.44em;aspect-ratio:16/18;margin-top:.0625em;
 }
 .brand .mark svg{height:100%;width:100%;display:block;fill:var(--accent)}
 /* The tagline is set to the title's measured width. Both sizes now derive from
