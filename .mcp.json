@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ai-cli": {
+      "command": "npx",
+      "args": ["ai-cli-mcp"],
+      "env": {
+        "MCP_CLAUDE_DEBUG": "false"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+display_name: side-piece
+short_description: Route resumable reviews and delegated work through the pinned ai-cli-mcp server.
+default_prompt: >-
+  Use the pinned agent-router workflow. Query the live model catalog, choose an
+  explicit provider/model, run in an isolated worktree, preserve the PID and
+  session ID, and report authoritative results from wait or get_result.

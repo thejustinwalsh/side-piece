@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "ai-cli": {
+      "type": "local",
+      "command": ["npx", "ai-cli-mcp"],
+      "enabled": true,
+      "environment": {
+        "MCP_CLAUDE_DEBUG": "false"
+      }
+    }
+  }
+}

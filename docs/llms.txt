@@ -1,0 +1,13 @@
+# side-piece
+
+> The other model, on the side. Pins ai-cli-mcp and installs one Agent Skill that
+> routes resumable external-model work from Claude Code, Codex, and opencode.
+
+Install by telling your coding agent: Let's install `@tjw/side-piece` in this project
+
+## Docs
+
+- [Install contract (README)](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/README.md): the authoritative setup and usage document, also shipped inside the npm tarball
+- [Skill](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/skill/side-piece/SKILL.md): the routing skill itself
+- [Repository](https://github.com/thejustinwalsh/side-piece)
+- [Pinned server](https://github.com/mkXultra/ai-cli-mcp): ai-cli-mcp

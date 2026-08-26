@@ -1,0 +1,51 @@
+{
+  "name": "@tjw/side-piece",
+  "version": "0.1.0",
+  "description": "The other model, on the side. Pins ai-cli-mcp and installs the agent-router skill into Claude Code, Codex, and opencode.",
+  "license": "MIT",
+  "author": "Justin Walsh (https://github.com/thejustinwalsh)",
+  "homepage": "https://tjw.dev/side-piece",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thejustinwalsh/side-piece.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thejustinwalsh/side-piece/issues"
+  },
+  "keywords": [
+    "agent-skills",
+    "skill",
+    "mcp",
+    "claude-code",
+    "codex",
+    "opencode",
+    "ai-cli-mcp",
+    "agent-router"
+  ],
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "bin": {
+    "side-piece": "bin/side-piece.mjs",
+    "ai-cli-mcp": "bin/mcp.mjs",
+    "ai-cli": "bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "skill",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "check": "node --test test/"
+  },
+  "sidePiece": {
+    "pinnedServer": "2.22.0"
+  },
+  "dependencies": {
+    "ai-cli-mcp": "2.22.0"
+  }
+}

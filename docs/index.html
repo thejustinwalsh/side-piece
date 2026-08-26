@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>side-piece</title>
+<meta name="description" content="The other model, on the side. A pinned ai-cli-mcp skill for Claude Code, Codex, and opencode.">
+<meta property="og:title" content="side-piece">
+<meta property="og:description" content="The other model, on the side. Give your coding agent a second opinion.">
+<meta property="og:url" content="https://tjw.dev/side-piece">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>🂡</text></svg>">
+<style>
+:root{
+  --bg:#fbfaf8; --fg:#16150f; --dim:#6c675c; --line:#e2ded4;
+  --card:#ffffff; --accent:#8a1f2c; --code:#f3f0e9;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Inter,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --bg:#0d0d0c; --fg:#eae7df; --dim:#918b7e; --line:#26251f;
+    --card:#141412; --accent:#d4636f; --code:#161614;
+  }
+}
+:root[data-theme=dark]{
+  --bg:#0d0d0c; --fg:#eae7df; --dim:#918b7e; --line:#26251f;
+  --card:#141412; --accent:#d4636f; --code:#161614;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+main{max-width:44rem;margin:0 auto;padding:clamp(3rem,10vw,6rem) 1.5rem 5rem}
+h1{
+  font-family:var(--mono);font-size:clamp(2rem,7vw,2.75rem);font-weight:600;
+  letter-spacing:-.03em;margin:0;
+}
+h1 .suit{color:var(--accent)}
+.tag{color:var(--dim);font-size:1.125rem;margin:.4rem 0 0}
+.lede{margin:2rem 0 0;font-size:1.0625rem}
+.lede em{color:var(--fg);font-style:italic}
+h2{
+  font-family:var(--mono);font-size:.8125rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--dim);margin:3.5rem 0 1rem;
+}
+p{margin:0 0 1rem}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+code{font-family:var(--mono);font-size:.9em;background:var(--code);padding:.15em .35em;border-radius:3px}
+
+.prompt{
+  margin:1rem 0 0;border:1px solid var(--line);border-radius:10px;background:var(--card);
+  display:flex;align-items:stretch;gap:0;overflow:hidden;
+}
+.prompt code{
+  flex:1;background:none;padding:1rem 1.125rem;font-size:.9375rem;line-height:1.5;
+  min-width:0;overflow-x:auto;white-space:nowrap;
+}
+.prompt button{
+  flex:none;border:0;border-left:1px solid var(--line);background:var(--card);color:var(--dim);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:0 1.125rem;cursor:pointer;transition:color .15s,background .15s;
+}
+.prompt button:hover{color:var(--fg);background:var(--code)}
+.prompt button[data-done]{color:var(--accent)}
+.hint{color:var(--dim);font-size:.875rem;margin:.625rem 0 0}
+
+pre{
+  background:var(--code);border:1px solid var(--line);border-radius:8px;
+  padding:.875rem 1rem;overflow-x:auto;margin:0 0 1rem;
+}
+pre code{background:none;padding:0;font-size:.875rem;line-height:1.65}
+
+.grid{display:grid;gap:.5rem;margin:0 0 1rem}
+@media(min-width:34rem){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid div{
+  border:1px solid var(--line);border-radius:8px;padding:.75rem .875rem;background:var(--card);
+  font-family:var(--mono);font-size:.8125rem;
+}
+.grid span{display:block;color:var(--dim);font-size:.75rem;margin-top:.15rem}
+
+dl{margin:0}
+dt{font-weight:600;margin:1.25rem 0 .25rem}
+dt:first-child{margin-top:0}
+dd{margin:0;color:var(--dim)}
+
+footer{
+  border-top:1px solid var(--line);margin-top:4rem;padding-top:1.25rem;
+  color:var(--dim);font-size:.875rem;display:flex;gap:1.25rem;flex-wrap:wrap;
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>side<span class="suit">·</span>piece</h1>
+  <p class="tag">The other model, on the side.</p>
+
+  <p class="lede">Your coding agent is good. It is also the <em>only</em> opinion in the room. <strong>side-piece</strong> teaches it to hand work to a different model — a review, a migration, a second read on the thing you are not sure about — and collect the answer without losing its place.</p>
+
+  <h2>Install</h2>
+  <p>From inside your project, give your coding agent this prompt:</p>
+  <div class="prompt">
+    <code id="p">Let's install `@tjw/side-piece` in this project</code>
+    <button id="c" aria-label="Copy prompt to clipboard">Copy</button>
+  </div>
+  <p class="hint">That is the whole thing. It installs the package, reads the README, and wires up whichever client it is running in.</p>
+
+  <h2>Works in</h2>
+  <div class="grid">
+    <div>Claude Code<span>.claude/skills</span></div>
+    <div>Codex<span>.agents/skills</span></div>
+    <div>opencode<span>.agents/skills</span></div>
+  </div>
+  <p>One skill, three clients. The install detects which one it is running inside and merges into whatever config is already there — it never replaces your other MCP servers.</p>
+
+  <h2>Then ask for a model by name</h2>
+  <pre><code>have opus review this diff adversarially
+
+get a second opinion from gpt-5.6-sol on the cache invalidation
+
+ask 0x alpha to try the migration in a worktree</code></pre>
+  <p>Every delegated run is a background job with a PID and a session ID. A provider that falls over is <em>resumed</em>, not restarted. A long review outlives a disconnected client. Reviews get an isolated worktree and no permission to write to yours.</p>
+
+  <h2>Questions</h2>
+  <dl>
+    <dt>What is actually installed?</dt>
+    <dd>One skill in <code>.agents/skills/side-piece</code>, a symlink where Claude Code looks for it, an <code>ai-cli</code> MCP entry per client, and a pinned <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> in <code>node_modules</code>. Everything but the binary is committed to your repo.</dd>
+
+    <dt>Which models can it reach?</dt>
+    <dd>Whatever your host has installed and signed in — Claude, Codex, Gemini, OpenCode, Forge. The skill queries the live catalog before routing, so it never invents a model name.</dd>
+
+    <dt>Does it send my code anywhere new?</dt>
+    <dd>Only to the provider CLIs you already have installed and authenticated. It runs them locally; there is no service in between and no account to make.</dd>
+
+    <dt>Is the version pinned?</dt>
+    <dd>Exactly. The server version lives in one <code>package.json</code> and nowhere else, so it cannot drift out from under a config file.</dd>
+
+    <dt>Do I have to use the prompt?</dt>
+    <dd>No. <code>npm i -D @tjw/side-piece &amp;&amp; npx side-piece install</code> does the same thing, and the <a href="https://github.com/thejustinwalsh/side-piece#manual-setup">README</a> documents placing every file by hand.</dd>
+  </dl>
+
+  <footer>
+    <a href="https://github.com/thejustinwalsh/side-piece">GitHub</a>
+    <a href="https://www.npmjs.com/package/@tjw/side-piece">npm</a>
+    <span>MIT © Justin Walsh</span>
+  </footer>
+</main>
+<script>
+document.getElementById('c').addEventListener('click', async (event) => {
+  const button = event.currentTarget;
+  try {
+    await navigator.clipboard.writeText(document.getElementById('p').textContent);
+    button.textContent = 'Copied';
+    button.dataset.done = '';
+  } catch {
+    button.textContent = 'Select it';
+    const range = document.createRange();
+    range.selectNodeContents(document.getElementById('p'));
+    const selection = getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  setTimeout(() => { button.textContent = 'Copy'; delete button.dataset.done; }, 1800);
+});
+</script>
+</body>
+</html>
