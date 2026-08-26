@@ -162,12 +162,8 @@ The MCP entry runs `side-piece-mcp`, a bin this package owns, and every document
 
 That indirection is also load bearing under pnpm. A dependency of a dependency gets no entry in your project's root `node_modules/.bin`, so pointing a config at the server directly would work under npm and break under pnpm. This package is a direct dependency, so its bins always land there.
 
-## What this actually is
+## What this is
 
-A skill wrapper around [ai-cli-mcp](https://github.com/mkXultra/ai-cli-mcp) by mkXultra. That server does the real work: running provider CLIs as tracked background processes with resumable sessions, which is the hard part and none of it is mine.
-
-side-piece adds the parts you would otherwise do by hand every time — it pins the server to an exact version, installs it into Claude Code, Codex, and opencode with their three different config formats, ships a skill that teaches an agent how to resolve a model name and when a run is worth delegating, and falls back to the command line when the MCP server is not connected yet.
-
-If you already know how you want to wire it up, skip all of this and install `ai-cli-mcp` directly. You will not be missing much.
+A convenience skill wrapper around [ai-cli-mcp](https://github.com/mkXultra/ai-cli-mcp) — mkXultra's excellent server, which does the actual work of running provider CLIs as tracked, resumable background jobs. side-piece pins it, wires it into all three clients, and ships a skill so your agent knows when to reach for it, with a CLI fallback for when MCP is not connected.
 
 MIT © Justin Walsh
