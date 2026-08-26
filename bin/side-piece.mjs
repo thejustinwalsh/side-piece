@@ -249,8 +249,13 @@ async function doctor(root) {
 // Everything the skill and README tell people to run goes through here, so the
 // underlying server is an implementation detail we can replace without
 // invalidating a single documented command.
-const FORWARDED = new Set(['models', 'run', 'wait', 'result', 'peek', 'ps', 'kill', 'providers', 'exec']);
-const RENAMED = { providers: 'doctor', ps: 'list', kill: 'kill' };
+// Names verified against `ai-cli --help`: run, wait, peek, ps, result, kill,
+// cleanup, doctor, models. Only "providers" is renamed — "doctor" is taken by
+// our own install check, and the underlying one reports provider binaries.
+const FORWARDED = new Set([
+  'models', 'run', 'wait', 'result', 'peek', 'ps', 'kill', 'cleanup', 'providers', 'exec',
+]);
+const RENAMED = { providers: 'doctor' };
 
 async function forward(command, rest) {
   const { runBin, resolveBin } = await import('./resolve.mjs');
@@ -290,6 +295,7 @@ Routing
   side-piece result <pid>        the authoritative result
   side-piece peek <pid>          a bounded progress sample
   side-piece ps                  runs this host still tracks
+  side-piece cleanup             forget completed and failed runs
   side-piece kill <pid>          cancel a run
   side-piece exec <args...>      anything else, forwarded verbatim
 
