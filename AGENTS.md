@@ -20,7 +20,7 @@
 
 **Skill discovery differs per client.** Codex and opencode read `.agents/skills/*/SKILL.md`. Claude Code reads `.claude/skills/*/SKILL.md` and nothing else. That asymmetry is why the installer symlinks rather than copying twice.
 
-**`ai-cli-mcp` is transitive.** It is our dependency, not the consumer's, so pnpm's isolated linker gives it no entry in the project's root `node_modules/.bin`. `@tjw/side-piece` is a direct dependency, so ours always lands there. The proxies in `bin/` exist for exactly that reason and for no other. Do not replace them with a direct `node_modules/.bin/ai-cli-mcp` path — verify with pnpm before assuming a simpler form works.
+**`ai-cli-mcp` is transitive.** It is our dependency, not the consumer's, so pnpm's isolated linker gives it no entry in the project's root `node_modules/.bin`. `@tjw.dev/side-piece` is a direct dependency, so ours always lands there. The proxies in `bin/` exist for exactly that reason and for no other. Do not replace them with a direct `node_modules/.bin/ai-cli-mcp` path — verify with pnpm before assuming a simpler form works.
 
 ## Changing the pinned server
 
@@ -39,7 +39,7 @@ There is no test runner yet. Verify by installing the packed tarball into a scra
 
 ```bash
 npm pack --pack-destination /tmp
-cd /tmp/scratch && pnpm add -D /tmp/tjw-side-piece-<version>.tgz
+cd /tmp/scratch && pnpm add -D /tmp/tjw.dev-side-piece-<version>.tgz
 pnpm exec side-piece install --client all --dry-run
 pnpm exec side-piece install --client all
 pnpm exec side-piece doctor

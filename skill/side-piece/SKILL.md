@@ -3,7 +3,7 @@ name: side-piece
 description: Route resumable external-model work through the pinned ai-cli-mcp server. Use for adversarial reviews, implementation reviews, research, and one-off delegated tasks when the user names Claude, Opus, Fable, Sonnet, Haiku, Codex, GPT-5, Sol, Terra, Luna, Gemini, Forge, OpenCode, 0x Alpha, or asks for an external model, a second opinion, or a review by another agent.
 license: MIT
 metadata:
-  package: "@tjw/side-piece"
+  package: "@tjw.dev/side-piece"
   server: ai-cli-mcp@2.22.0
   homepage: https://tjw.dev/side-piece
 ---
@@ -18,8 +18,8 @@ Every run is resumable. Start it with `run`, retain the returned PID, use `peek`
 
 Before using a new checkout or machine:
 
-1. Confirm `package.json` depends on `@tjw/side-piece`, which pins `ai-cli-mcp` exactly. Confirm the lockfile agrees.
-2. Confirm the MCP entry in `.mcp.json` (Claude Code), `.codex/config.toml` (Codex), and `opencode.json` (opencode) invokes the workspace launcher `node_modules/@tjw/side-piece/bin/mcp.mjs`. That launcher resolves the pinned server from the workspace; never substitute an unpinned `npx ai-cli-mcp@latest` download.
+1. Confirm `package.json` depends on `@tjw.dev/side-piece`, which pins `ai-cli-mcp` exactly. Confirm the lockfile agrees.
+2. Confirm the MCP entry in `.mcp.json` (Claude Code), `.codex/config.toml` (Codex), and `opencode.json` (opencode) invokes the workspace launcher `node_modules/@tjw.dev/side-piece/bin/mcp.mjs`. That launcher resolves the pinned server from the workspace; never substitute an unpinned `npx ai-cli-mcp@latest` download.
 3. Run `npx side-piece doctor`. It verifies skill placement, every client's MCP entry, and the resolved server version.
 4. Run `npx ai-cli models` and retain the structured output as the model-routing fact for this run.
 5. Run `npx ai-cli doctor` for binary availability. It does not prove login, terms acceptance, quota, or provider health, so check those with the provider's own status command when a run needs them.
@@ -137,6 +137,6 @@ The pinned server reaches each client through the same workspace launcher:
 | Codex | `.codex/config.toml` | `[mcp_servers.ai-cli]` |
 | opencode | `opencode.json` | `mcp.ai-cli` |
 
-All three run `node node_modules/@tjw/side-piece/bin/mcp.mjs`, which resolves `ai-cli-mcp` from the workspace. `tool_timeout_sec` controls the maximum individual MCP call, not server lifetime; the checked-in Codex value is one hour so a long `wait` can remain attached while the server itself stays a normal stdio process.
+All three run `node node_modules/@tjw.dev/side-piece/bin/mcp.mjs`, which resolves `ai-cli-mcp` from the workspace. `tool_timeout_sec` controls the maximum individual MCP call, not server lifetime; the checked-in Codex value is one hour so a long `wait` can remain attached while the server itself stays a normal stdio process.
 
 Details the router needs while diagnosing live runs are in [references/lifecycle.md](references/lifecycle.md); the catalog's interpretation is in [references/model-catalog.md](references/model-catalog.md).

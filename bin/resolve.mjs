@@ -1,12 +1,12 @@
 // Resolve a bin entry point from the pinned ai-cli-mcp package.
 //
-// ai-cli-mcp is a dependency of @tjw/side-piece, which makes it *transitive*
+// ai-cli-mcp is a dependency of @tjw.dev/side-piece, which makes it *transitive*
 // from the consuming project's point of view. pnpm's isolated linker only
 // hoists bins for direct dependencies, so under pnpm there is no
 // node_modules/.bin/ai-cli-mcp and no node_modules/ai-cli-mcp -- only
 // .pnpm/ai-cli-mcp@<version>/..., a path that hardcodes the version.
 //
-// @tjw/side-piece *is* a direct dependency, so its bins always land in
+// @tjw.dev/side-piece *is* a direct dependency, so its bins always land in
 // node_modules/.bin under every package manager. We re-expose ai-cli-mcp and
 // ai-cli under their own names from here, so every documented command --
 // `pnpm exec ai-cli-mcp`, `pnpm exec ai-cli models` -- works unchanged.
@@ -39,7 +39,7 @@ export async function runBin(binName) {
     // stdout is the MCP transport. Diagnostics go to stderr, always.
     process.stderr.write(
       `side-piece: could not resolve the pinned ${PACKAGE}.\n` +
-        `  Reinstall the package:  npm install --save-dev @tjw/side-piece\n` +
+        `  Reinstall the package:  npm install --save-dev @tjw.dev/side-piece\n` +
         `  Underlying error: ${error instanceof Error ? error.message : String(error)}\n`,
     );
     process.exit(1);

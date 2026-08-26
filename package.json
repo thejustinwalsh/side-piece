@@ -1,5 +1,5 @@
 {
-  "name": "@tjw/side-piece",
+  "name": "@tjw.dev/side-piece",
   "version": "0.1.0",
   "description": "The other model, on the side. Pins ai-cli-mcp and installs the agent-router skill into Claude Code, Codex, and opencode.",
   "license": "MIT",

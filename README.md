@@ -10,7 +10,7 @@ Works in **Claude Code**, **Codex**, and **opencode**.
 
 From inside your project, give your coding agent this prompt:
 
-> Let's install `@tjw/side-piece` in this project
+> Let's install `@tjw.dev/side-piece` in this project
 
 That is the whole thing. Your agent installs the package, reads this file, and wires up whichever client it is running in.
 
@@ -30,7 +30,7 @@ Everything the project needs is in the project. `node_modules` only supplies the
 ## Setup
 
 ```bash
-npm install --save-dev @tjw/side-piece
+npm install --save-dev @tjw.dev/side-piece
 npx side-piece install
 ```
 
@@ -84,7 +84,7 @@ This is the documented fallback while a client has not yet reloaded the MCP serv
 
 ### Why the bins are re-exposed
 
-`ai-cli-mcp` is a dependency of `@tjw/side-piece`, which makes it *transitive* from your project's point of view. pnpm's isolated linker only hoists bins for direct dependencies, so under pnpm there is no `node_modules/.bin/ai-cli-mcp` to point a config at — only `.pnpm/ai-cli-mcp@2.22.0/…`, a path with the version baked into it. `@tjw/side-piece` *is* a direct dependency, so its bins always land in `node_modules/.bin`. Re-exposing `ai-cli-mcp` and `ai-cli` from here keeps every documented command working and keeps the version in exactly one place: this package's `package.json`.
+`ai-cli-mcp` is a dependency of `@tjw.dev/side-piece`, which makes it *transitive* from your project's point of view. pnpm's isolated linker only hoists bins for direct dependencies, so under pnpm there is no `node_modules/.bin/ai-cli-mcp` to point a config at — only `.pnpm/ai-cli-mcp@2.22.0/…`, a path with the version baked into it. `@tjw.dev/side-piece` *is* a direct dependency, so its bins always land in `node_modules/.bin`. Re-exposing `ai-cli-mcp` and `ai-cli` from here keeps every documented command working and keeps the version in exactly one place: this package's `package.json`.
 
 ## Before the first run
 
@@ -95,7 +95,7 @@ Each provider CLI must be installed and signed in on the host. `ai-cli doctor` r
 The server version lives in this package. Bump the dependency and reinstall:
 
 ```bash
-npm install --save-dev @tjw/side-piece@latest
+npm install --save-dev @tjw.dev/side-piece@latest
 npx side-piece install --force
 ```
 
