@@ -4,7 +4,7 @@ The router does not own a permanent copy of provider availability. Query `models
 
 ## Naming
 
-The router uses direct names for Claude, Codex, and Gemini. `forge` is a provider key rather than a model-family selector. OpenCode has a configured-default name, `opencode`, and dynamic explicit names carrying the `oc-` prefix. The provider-native `opencode/x-preview-f-free` therefore becomes `oc-opencode/x-preview-f-free` at the router boundary; the prefix is required and the pattern is exact, so a malformed value is rejected rather than coerced.
+The router uses direct names for Claude, Codex, and Gemini. `forge` is a provider key rather than a model-family selector. OpenCode has a configured-default name, `opencode`, and dynamic explicit names carrying the `oc-` prefix. A provider-native name such as `opencode/big-pickle` therefore becomes `oc-opencode/big-pickle` at the router boundary; the prefix is required and the pattern is exact, so a malformed value is rejected rather than coerced. That name is an illustration, not a fixture — OpenCode rotates its free and preview slots, so resolve against `opencode models` at routing time and never carry one forward from a previous session.
 
 Model names route to providers by prefix: anything starting with `gpt-` is Codex, anything starting with `gemini` is Gemini, `forge` is Forge, `opencode`/`oc-` is OpenCode, and everything else falls through to Claude. That fall-through is why an unvalidated typo silently becomes a Claude request — check the catalog before routing.
 

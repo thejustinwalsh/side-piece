@@ -66,17 +66,19 @@ People say `opus`, `sol`, `mimo`. Those are not always the values the server acc
 
 The fall-through rule makes step 3 non-negotiable: an unrecognized name is not rejected by the server, it is sent to **Claude**. A typo becomes a silent Claude request.
 
-| User says | Resolves to | Rule |
-| --- | --- | --- |
-| `opus`, `sonnet`, `haiku` | itself | Already a catalog name. `reasoning_effort: high`. |
-| `sonnet 1m`, `long context` | `sonnet[1m]` | Claude. The brackets are part of the name. |
-| `spark` | `gpt-5.3-codex-spark` | Codex. Fast tier; do not confuse with `gpt-5.3-codex`. |
-| `opusplan`, `plan with opus` | `opusplan` | Claude. Opus plans, a cheaper model executes. |
-| `fable` | `fable` | Explicit request only, never auto-selected. May require usage credits. |
-| `sol`, `terra`, `luna` | the `gpt-5.6-*` entry containing that word | Codex. `terra` has two `r`s; accept `tera` as a typo for it. |
-| `mimo`, `nemotron`, `pickle`, … | the unique `opencode/*` match, prefixed `oc-` | See below. Omit `reasoning_effort`. |
-| `ultra`, `max effort`, `hardest` | the matching `*-ultra` alias | The alias sets its own effort; do not also pass `reasoning_effort`. **Confirm before running — see Effort.** |
-| `claude:<model>`, `codex:<model>` | the suffix | Validate the suffix against the catalog. |
+| User says | Provider | Passed as | Rule |
+| --- | --- | --- | --- |
+| `opus`, `sonnet`, `haiku` | Claude | the same word | Already catalog names. `reasoning_effort: high`. |
+| `sonnet 1m`, `long context` | Claude | `sonnet[1m]` | The brackets are part of the name. |
+| `opusplan`, `plan with opus` | Claude | `opusplan` | Opus plans, a cheaper model executes. |
+| `fable` | Claude | `fable` | Explicit request only, never auto-selected. May require usage credits. |
+| `sol`, `terra`, `luna` | Codex | the `gpt-5.6-*` entry containing that word | `terra` has two `r`s; accept `tera` as a typo for it. |
+| `spark` | Codex | `gpt-5.3-codex-spark` | Fast tier. Do not confuse with `gpt-5.3-codex`. |
+| a `gpt-` name | Codex | the same word | Validate against the catalog. |
+| a `gemini` name | Gemini | the same word | Omit `reasoning_effort`. |
+| `mimo`, `nemotron`, `pickle`, … | OpenCode | the unique `opencode/*` match, prefixed `oc-` | Discovered, not listed — see below. Omit `reasoning_effort`. |
+| `ultra`, `max effort`, `hardest` | as chosen | the matching `*-ultra` alias | The alias sets its own effort; do not also pass `reasoning_effort`. **Confirm before running — see Effort.** |
+| `claude:<model>`, `codex:<model>` | as named | the suffix | Validate the suffix against the catalog. |
 
 Naming a model always beats the router's own preference. Report an unavailable route rather than substituting one.
 
