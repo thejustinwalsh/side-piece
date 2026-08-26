@@ -1,13 +1,24 @@
 # side-piece
 
-> The other model, on the side. Pins ai-cli-mcp and installs one Agent Skill that
-> routes resumable external-model work from Claude Code, Codex, and opencode.
+> A convenience skill wrapper around ai-cli-mcp. It pins that server, installs it into
+> Claude Code, Codex, and opencode, and ships a skill that routes resumable
+> external-model work — reviews, delegated implementation, second opinions — to a
+> model other than the one running.
 
-Install by telling your coding agent: Let's install `@tjw.dev/side-piece` in this project, then tell me how to use it
+## Install it
+
+    npm install --save-dev @tjw.dev/side-piece
+
+Then read `node_modules/@tjw.dev/side-piece/README.md` and follow it.
+
+That file is the install contract. It ships inside the tarball so you have it on disk,
+and it is authoritative over anything written here.
 
 ## Docs
 
-- [Install contract (README)](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/README.md): the authoritative setup and usage document, also shipped inside the npm tarball
-- [Skill](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/skill/side-piece/SKILL.md): the routing skill itself
+- [README](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/README.md): the install contract
+- [SKILL.md](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/skill/side-piece/SKILL.md): routing, shorthand resolution, effort rules
+- [lifecycle](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/skill/side-piece/references/lifecycle.md): PIDs, sessions, resume, run state
+- [model catalog](https://raw.githubusercontent.com/thejustinwalsh/side-piece/main/skill/side-piece/references/model-catalog.md): reading the catalog response
 - [Repository](https://github.com/thejustinwalsh/side-piece)
-- [Pinned server](https://github.com/mkXultra/ai-cli-mcp): ai-cli-mcp
+- [ai-cli-mcp](https://github.com/mkXultra/ai-cli-mcp): the pinned server, by mkXultra
