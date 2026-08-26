@@ -171,9 +171,6 @@ ask mimo to try the migration in a worktree</code></pre>
 
   <h2>Questions</h2>
   <dl>
-    <dt>What is this?</dt>
-    <dd>A convenience skill wrapper around <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> — mkXultra's excellent server, which does the actual work. side-piece pins it, wires it into all three clients, and ships the skill that decides when to use it. What lands: one skill in <code>.agents/skills/side-piece</code>, a link where Claude Code looks for it, and a <code>side-piece</code> MCP entry per client — all committed. Only the pinned server sits in <code>node_modules</code>.</dd>
-
     <dt>Which models can it reach?</dt>
     <dd>Whichever CLIs you already have installed and signed in — <code>claude</code>, <code>codex</code>, <code>gemini</code>, <code>opencode</code>. side-piece runs those binaries on your machine, as you, spending the subscriptions you already pay for. Nothing new to sign up for and no API keys to paste.</dd>
 
@@ -186,6 +183,9 @@ ask mimo to try the migration in a worktree</code></pre>
 
     <dt>Will it pick a model I did not ask for?</dt>
     <dd>Never. It checks the live catalog before routing, so it cannot invent a name, and naming a model always beats its own preference. Ask for something that is not there and it says so.</dd>
+
+    <dt>Why did you make this?</dt>
+    <dd><a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> already does the hard part. I wanted it pinned to a version, wired into all three clients, and paired with a skill that knows when to reach for it — rather than redoing that in every repo.</dd>
 
 
   </dl>
