@@ -13,7 +13,9 @@ Route external-model work through the project's `side-piece` MCP server. Do not 
 
 Every run is resumable. Start it with `run`, retain the returned PID, use `peek` only for a bounded progress sample, use `wait` or `get_result` for the authoritative outcome, and resume with the returned `session_id` when a provider fails or the user asks for another pass. A one-off task is still started in the background; `wait` immediately afterward is the blocking recipe.
 
-**Resume a thread. Start a new session for new work.** A resumed session lands on the provider's cached conversation, so a follow-up is billed as a follow-up instead of a second full review. That history is re-sent on every turn, though, so resuming only pays when the history is relevant.
+**Resume a thread. Start a new session for new work.** Resume to keep the model's own reasoning in play: a live session still holds which files it opened and what it weighed and rejected, none of which survives a summary. This matters most adversarially — reopening with a summary supplies your framing of its position, so it agrees with your précis instead of defending what it actually argued. A resumed session has to argue with itself.
+
+Cost follows, but narrowly: a prompt follow-up rides the provider's cached context and is billed as a follow-up rather than a second full review. That is a tiebreaker, not the reason.
 
 Resume when the prompt continues the same thread against the same target commit and worktree — challenging, correcting, or extending what that session already said. *Push back on point three.* *You missed the error path.* *Go deeper on the cache logic.*
 
