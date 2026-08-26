@@ -132,8 +132,8 @@ ask mimo to try the migration in a worktree</code></pre>
     <dt>Why does it resume instead of starting over?</dt>
     <dd>Cost. A follow-up continues the conversation the provider already has cached instead of re-sending it, so you pay for the follow-up rather than the whole review twice. Say <em>push back on point three</em> and it still knows what point three was.</dd>
 
-    <dt>Does my code go anywhere new?</dt>
-    <dd>No. It goes exactly where it already goes when you run those CLIs yourself. side-piece is a router, not a service — there is nothing in between.</dd>
+    <dt>Where does my code go?</dt>
+    <dd>To the same provider your CLI already talks to, and nowhere else. side-piece is a router, not a service — there is nothing in between.</dd>
 
     <dt>What lands in my project?</dt>
     <dd>One skill in <code>.agents/skills/side-piece</code>, a link where Claude Code looks for it, and a <code>side-piece</code> entry in each client's MCP config. All committed. The only thing in <code>node_modules</code> is the pinned <a href="https://github.com/mkXultra/ai-cli-mcp">ai-cli-mcp</a> server.</dd>
