@@ -3,7 +3,7 @@
 > The other model, on the side. Pins ai-cli-mcp and installs one Agent Skill that
 > routes resumable external-model work from Claude Code, Codex, and opencode.
 
-Install by telling your coding agent: Let's install `@tjw.dev/side-piece` in this project
+Install by telling your coding agent: Let's install `@tjw.dev/side-piece` in this project, then tell me how to use it
 
 ## Docs
 

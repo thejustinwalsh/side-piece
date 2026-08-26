@@ -55,13 +55,13 @@ code{font-family:var(--mono);font-size:.9em;background:var(--code);padding:.15em
   display:flex;align-items:stretch;gap:0;overflow:hidden;
 }
 .prompt code{
-  flex:1;background:none;padding:1rem 1.125rem;font-size:.9375rem;line-height:1.5;
-  min-width:0;overflow-x:auto;white-space:nowrap;
+  flex:1;background:none;padding:1rem 1.125rem;font-size:.9375rem;line-height:1.55;
+  min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;
 }
 .prompt button{
   flex:none;border:0;border-left:1px solid var(--line);background:var(--card);color:var(--dim);
   font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
-  padding:0 1.125rem;cursor:pointer;transition:color .15s,background .15s;
+  padding:0 1.125rem;cursor:pointer;white-space:nowrap;transition:color .15s,background .15s;
 }
 .prompt button:hover{color:var(--fg);background:var(--code)}
 .prompt button[data-done]{color:var(--accent)}
@@ -102,10 +102,10 @@ footer{
   <h2>Install</h2>
   <p>From inside your project, give your coding agent this prompt:</p>
   <div class="prompt">
-    <code id="p">Let's install `@tjw.dev/side-piece` in this project</code>
+    <code id="p">Let's install `@tjw.dev/side-piece` in this project, then tell me how to use it</code>
     <button id="c" aria-label="Copy prompt to clipboard">Copy</button>
   </div>
-  <p class="hint">That is the whole thing. It installs the package, reads the README, and wires up whichever client it is running in.</p>
+  <p class="hint">That is the whole thing. It installs the package, wires up whichever client it is running in, and walks you through the first run.</p>
 
   <h2>Works in</h2>
   <div class="grid">
