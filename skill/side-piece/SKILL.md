@@ -13,19 +13,7 @@ Route external-model work through the project's `side-piece` MCP server. Do not 
 
 Every run is resumable. Start it with `run`, retain the returned PID, use `peek` only for a bounded progress sample, use `wait` or `get_result` for the authoritative outcome, and resume with the returned `session_id` when a provider fails or the user asks for another pass. A one-off task is still started in the background; `wait` immediately afterward is the blocking recipe.
 
-**Resume a thread. Start a new session for new work.** Resume to keep the model's own reasoning in play: a live session still holds which files it opened and what it weighed and rejected, none of which survives a summary. This matters most adversarially — reopening with a summary supplies your framing of its position, so it agrees with your précis instead of defending what it actually argued. A resumed session has to argue with itself.
-
-Cost follows, but narrowly: a prompt follow-up rides the provider's cached context and is billed as a follow-up rather than a second full review. That is a tiebreaker, not the reason.
-
-Resume when the prompt continues the same thread against the same target commit and worktree — challenging, correcting, or extending what that session already said. *Push back on point three.* *You missed the error path.* *Go deeper on the cache logic.*
-
-Start fresh when the target commit or worktree changed, when it is a different kind of task, or when the prior history has nothing to do with the new question. Do not reuse a review session for an implementation, and do not ask a stale session about a different checkout.
-
-Resume promptly. Provider prompt caches expire after inactivity — minutes by default, not hours — and the router cannot see cache state. A session picked up while warm rides that cache. A session picked up cold re-sends its entire accumulated transcript at full price, which for a long thread costs *more* than a fresh session with a tight prompt. The longer the history, the worse a cold resume gets.
-
-So for a session that has been idle a while, weigh its size. Short history: resume. Long and cold: start fresh and carry forward a distilled summary of what actually matters — the conclusion, the file references, the open question — instead of dragging the whole transcript back through at full rate.
-
-When it is genuinely unclear, ask. A wrongly resumed session is worse than a fresh one: it answers from stale context and charges for carrying it.
+**Resuming.** Resume when the prompt continues the same thread against the same target: that keeps the model's own reasoning in play, so it defends what it argued rather than agreeing with your summary of it. Start fresh when the target or the kind of work changed, or when a long session has sat idle long enough to lose its cache — resending a cold transcript costs more than it saves. Unsure: ask.
 
 Use the `side-piece` command for everything documented here. It is the stable surface; the server underneath it is an implementation detail that can be replaced.
 
@@ -143,7 +131,7 @@ For an adversarial review:
 1. Resolve the model with `models` and choose the requested provider explicitly.
 2. Use an absolute isolated worktree as `workFolder`; include the target commit, review scope, acceptance criteria, and the instruction to report evidence with file and line references.
 3. Call `run` with the review prompt. Do not give a review agent a mutation mandate. The wrapper bypasses provider permission prompts, so isolation and a clean worktree are the safety boundary.
-4. Record PID, session ID, provider, model, worktree, target commit, status, and the **timestamp of the last turn** in the ignored `.cache/side-piece/` run manifest. That timestamp is the only way to judge later whether resuming a session is still cheap.
+4. Record PID, session ID, provider, model, worktree, target commit, status, and the **timestamp of the last turn** in the ignored `.cache/side-piece/` run manifest.
 5. Use `peek` for a short progress sample only. Use `wait` or `get_result` to collect the complete result.
 6. On a transient provider failure, call `run` again with the same `session_id` and worktree. Do not start a fresh session unless the original is unrecoverable.
 7. After integration changes, run a new review against the new commit; do not ask a stale session to review a different checkout without stating the new target.
