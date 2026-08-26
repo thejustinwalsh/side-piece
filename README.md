@@ -107,23 +107,30 @@ That last one is worth knowing: parallel runs start together and are waited on t
 npx side-piece install --client all      # wire every client, not just the detected one
 npx side-piece install --dry-run         # print the plan, write nothing
 npx side-piece install --force           # overwrite an existing skill or MCP entry
-npx side-piece doctor                    # verify placement and every client entry
+npx side-piece doctor                    # full health check, see below
 ```
 
-Routing, when you want to drive it yourself:
+`doctor` is one command for the whole picture: skill placement, every client's MCP entry, the resolved server version, and which provider binaries are on your `PATH`. It reports that binaries exist — not that you are logged in, within quota, or have accepted terms.
+
+Driving a run yourself, if you want to:
 
 ```bash
 npx side-piece models                    # the live catalog — check before choosing
-npx side-piece providers                 # provider binaries on PATH, not login or quota
-npx side-piece run --cwd /abs/worktree --model opus --prompt-file /abs/prompt.md
-npx side-piece wait <pid> --timeout 300 --verbose
-npx side-piece result <pid> --verbose
+npx side-piece providers                 # just the provider binaries
+npx side-piece run --cwd <abs> --model <m> [--prompt <text> | --prompt-file <abs>]
+                   [--reasoning-effort <level>] [--session-id <id>]
+npx side-piece wait <pid...> [--timeout <sec>] [--verbose]
+npx side-piece peek <pid...> [--time <sec>] [--include-tool-calls]
+npx side-piece result <pid> [--verbose]
 npx side-piece ps                        # runs this host still tracks
+npx side-piece kill <pid>                # cancel a run
+npx side-piece cleanup                   # forget completed and failed runs
+npx side-piece exec <args...>            # anything else, forwarded verbatim
 ```
 
-Use these rather than the underlying server's own commands. `side-piece` is the stable surface; what runs beneath it can be swapped without invalidating anything documented here.
+Your agent will not normally use any of these. Once the MCP server is loaded it has the same operations as tools, with schemas, and should prefer them — the command line is the fallback for when a client has not reloaded yet.
 
-This is also the documented fallback while a client has not reloaded the MCP server yet. It shares the same process state, so runs stay resumable. It is *not* evidence the MCP transport is healthy — check that with `claude mcp get side-piece` or `codex mcp get side-piece`.
+Use these rather than the underlying server's own commands. `side-piece` is the stable surface; what runs beneath it can be swapped without invalidating anything documented here. The fallback shares the same process state, so runs stay resumable — but a working fallback is *not* evidence the MCP transport is healthy. Check that with `claude mcp get side-piece` or `codex mcp get side-piece`.
 
 ## When something is wrong
 

@@ -15,32 +15,48 @@ Every run is resumable. Start it with `run`, retain the returned PID, use `peek`
 
 **Resuming.** Resume when the prompt continues the same thread against the same target: that keeps the model's own reasoning in play, so it defends what it argued rather than agreeing with your summary of it. Start fresh when the target or the kind of work changed, or when a long session has sat idle long enough to lose its cache — resending a cold transcript costs more than it saves. Unsure: ask.
 
-Use the `side-piece` command for everything documented here. It is the stable surface; the server underneath it is an implementation detail that can be replaced.
+## Reach for the MCP tools first
+
+The `side-piece` server puts its tools in your registry with their own schemas. **Use those.** They are the primary interface, they are already described to you, and nothing here restates them.
+
+Drop to the `side-piece` command only when those tools are genuinely not present — a client that has not reloaded since install is the usual reason. That path is a fallback, not a preference: mark such runs `transport: cli-fallback`, keep trying to restore MCP visibility, and never report MCP as healthy because the fallback worked.
+
+When you do use the command line, use `side-piece`, never the underlying server's own binary. `side-piece` is the stable surface; what runs beneath it can be replaced without invalidating anything written here.
+
+Never call a provider CLI directly. Neither path is a licence to run `claude`, `codex`, or `opencode` yourself — doing so loses process tracking, the session ID, and every guarantee in this document.
 
 ## Setup and health check
 
 Before using a new checkout or machine:
 
-1. Run `npx side-piece doctor`. It verifies skill placement, every client's MCP entry, and the resolved server version. Every line must read `ok`.
-2. Run `npx side-piece models` and retain the structured output as the model-routing fact for this run.
-3. Run `npx side-piece providers` for binary availability. It does not prove login, terms acceptance, quota, or provider health, so check those with the provider's own status command when a run needs them.
-4. Reload or restart the MCP client after any configuration change. MCP servers are read at startup, so a correct install does nothing until the client restarts. Confirm the `side-piece` MCP tools (`models`, `run`, `wait`, `get_result`) are present in the active tool registry.
-5. Perform a small background smoke run through those MCP tools in an isolated temporary worktree, wait for it, and verify a non-empty result including a session ID. Resume that session with a second tiny prompt before declaring the router healthy.
+1. Run `npx side-piece doctor`. One command covers skill placement, every client's MCP entry, the resolved server version, and which provider binaries are on `PATH`. Every line must read `ok`.
+2. Reload or restart the MCP client. Servers are read at startup, so a correct install does nothing until it restarts — this is the most common reason a clean setup appears broken.
+3. Confirm the `side-piece` tools are in your active registry. If they are absent, inspect Codex with `codex mcp get side-piece` and Claude with `claude mcp get side-piece`, then reload. A missing server is a setup failure, not a reason to proceed on the fallback.
+4. Smoke it: one small background run in an isolated temporary worktree, waited on, returning a non-empty result with a session ID. Resume that session with a second tiny prompt before calling the router healthy.
 
-`npx side-piece run` is useful for diagnosing the pinned package and provider authentication, but it is only the CLI façade and does not validate the MCP transport. If the server is not visible to the host client, inspect Codex with `codex mcp get side-piece` and Claude with `claude mcp get side-piece`, then reload. A missing server is a setup failure; do not report the CLI façade as an MCP smoke test or fall back silently to direct provider CLIs.
+`doctor` proves binaries exist. It does **not** prove login, terms acceptance, or quota — check those with each provider's own status command when a run depends on them. Claude additionally requires one manual `claude --dangerously-skip-permissions` run to accept terms before anything can drive it.
 
-Each provider CLI must be installed and signed in on the host before the router can reach it. Claude additionally requires one manual `claude --dangerously-skip-permissions` run to accept terms.
+### The fallback command surface
 
-### CLI fallback while MCP is unavailable
-
-Use the façade temporarily when the host client has not reloaded the server:
+Unlike the MCP tools, these names are not self-describing, so they are listed here in full. Flags are as the server accepts them:
 
 ```bash
-npx side-piece models
-npx side-piece run --cwd /absolute/worktree --model <validated-model> --prompt-file /absolute/prompt.md
-npx side-piece wait <pid> --timeout 300 --verbose
-npx side-piece result <pid> --verbose
+npx side-piece models                       # the routing catalog
+npx side-piece providers                    # provider binaries on PATH
+npx side-piece run --cwd <abs> --model <m> [--prompt <text> | --prompt-file <abs>]
+                   [--reasoning-effort <level>] [--session-id <id>]
+npx side-piece wait <pid...> [--timeout <sec>] [--verbose]
+npx side-piece peek <pid...> [--time <sec>] [--include-tool-calls]
+npx side-piece result <pid> [--verbose]
+npx side-piece ps                           # runs this host still tracks
+npx side-piece kill <pid>                   # cancellation, not recovery
+npx side-piece cleanup                      # forget completed and failed runs
+npx side-piece exec <args...>               # anything else, forwarded verbatim
 ```
+
+`--cwd` here is the same thing the MCP `run` tool calls `workFolder`; the CLI and the tools name several things differently, so do not carry a flag from one into the other.
+
+`npx side-piece doctor` is ours rather than the server's: it checks skill placement and every client's MCP entry, then folds in the provider report. `peek` defaults to a 10 second window and caps at 60.
 
 This shares the same server-side process state, so runs stay resumable. Capture the PID, provider/model, absolute worktree, target commit, and returned `session_id`; resume with `run --session-id <session_id>`. Label the run `transport: cli-fallback` and keep trying to restore MCP visibility. Never replace this with a globally installed provider CLI, and never claim MCP is healthy because the fallback succeeded.
 

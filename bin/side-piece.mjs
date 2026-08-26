@@ -16,6 +16,7 @@ import { createRequire } from 'node:module';
 import { dirname, join, parse, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline/promises';
+import { execFile } from 'node:child_process';
 
 const SKILL = 'side-piece';
 const SERVER = 'side-piece';
@@ -213,16 +214,43 @@ async function applyPlan(plan) {
 
 // -------------------------------------------------------------------- doctor
 
+// Ask the pinned server which provider binaries it can actually see. Placement
+// and config being correct proves nothing if no provider CLI is installed --
+// that is the most common reason a clean install still cannot run anything.
+async function providerReport() {
+  let entry;
+  try {
+    const { resolveBin } = await import('./resolve.mjs');
+    entry = fileURLToPath(resolveBin('ai-cli').href);
+  } catch {
+    return null;
+  }
+  return new Promise((resolve) => {
+    execFile(process.execPath, [entry, 'doctor'], { timeout: 20000 }, (error, stdout) => {
+      try {
+        resolve(JSON.parse(stdout));
+      } catch {
+        resolve(null);
+      }
+    });
+  });
+}
+
 async function doctor(root) {
   const require = createRequire(join(PACKAGE_ROOT, 'package.json'));
   const lines = [];
-  const check = (ok, label, detail) => lines.push(`  ${ok ? 'ok  ' : 'FAIL'}  ${label}${detail ? ` — ${detail}` : ''}`);
+  let failed = false;
+  const check = (ok, label, detail) => {
+    if (!ok) failed = true;
+    lines.push(`  ${ok ? 'ok  ' : 'FAIL'}  ${label}${detail ? ` — ${detail}` : ''}`);
+  };
+  const note = (label, detail) => lines.push(`  --    ${label}${detail ? ` — ${detail}` : ''}`);
 
   let version = null;
   try {
     version = JSON.parse(await readFile(require.resolve('ai-cli-mcp/package.json'), 'utf8')).version;
   } catch {}
-  check(Boolean(version), 'pinned ai-cli-mcp resolves', version ? `${version}` : 'not found — run npm install');
+  check(Boolean(version), 'pinned server resolves', version ? `ai-cli-mcp ${version}` : 'not found — run npm install');
 
   const skill = join(root, '.agents', 'skills', SKILL, 'SKILL.md');
   check(existsSync(skill), 'skill installed', relative(root, skill));
@@ -240,8 +268,21 @@ async function doctor(root) {
   const opencode = await readJson(join(root, 'opencode.json'), null);
   check(Boolean(opencode?.mcp?.[SERVER]), 'opencode.json entry');
 
+  const providers = await providerReport();
+  if (!providers) {
+    note('provider CLIs', 'could not query the server');
+  } else {
+    const names = Object.keys(providers).filter((key) => key !== 'checks');
+    const found = names.filter((name) => providers[name]?.available);
+    check(found.length > 0, 'a provider CLI is installed', found.length ? found.join(', ') : 'none found — install and sign in to at least one');
+    for (const name of names) {
+      if (!providers[name]?.available) note(`  ${name}`, 'not on PATH');
+    }
+    note('login and quota', 'not checked — run each provider\'s own status command');
+  }
+
   process.stdout.write(`side-piece doctor — ${root}\n${lines.join('\n')}\n`);
-  return lines.every((line) => line.includes('ok  '));
+  return !failed;
 }
 
 // --------------------------------------------------------------- passthrough
@@ -249,9 +290,10 @@ async function doctor(root) {
 // Everything the skill and README tell people to run goes through here, so the
 // underlying server is an implementation detail we can replace without
 // invalidating a single documented command.
+//
 // Names verified against `ai-cli --help`: run, wait, peek, ps, result, kill,
 // cleanup, doctor, models. Only "providers" is renamed — "doctor" is taken by
-// our own install check, and the underlying one reports provider binaries.
+// our own install check, which now also folds in the provider report.
 const FORWARDED = new Set([
   'models', 'run', 'wait', 'result', 'peek', 'ps', 'kill', 'cleanup', 'providers', 'exec',
 ]);
@@ -260,8 +302,7 @@ const RENAMED = { providers: 'doctor' };
 async function forward(command, rest) {
   const { runBin, resolveBin } = await import('./resolve.mjs');
   const argv = command === 'exec' ? rest : [RENAMED[command] ?? command, ...rest];
-  const { href } = resolveBin('ai-cli');
-  process.argv = [process.argv[0], new URL(href).pathname, ...argv];
+  process.argv = [process.argv[0], fileURLToPath(resolveBin('ai-cli').href), ...argv];
   await runBin('ai-cli');
 }
 
@@ -285,7 +326,7 @@ const HELP = `side-piece — the other model, on the side.
 
 Setup
   side-piece install [options]   place the skill and wire up MCP config
-  side-piece doctor              verify placement and every client entry
+  side-piece doctor              placement, MCP entries, server, provider binaries
 
 Routing
   side-piece models              the routing catalog — check before choosing
