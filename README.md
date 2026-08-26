@@ -1,6 +1,16 @@
-# side-piece
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/mark-on-dark.svg">
+    <img src="docs/mark-on-light.svg" alt="" width="58">
+  </picture>
+</p>
 
-The other model, on the side.
+<h1 align="center">side-piece</h1>
+
+<p align="center">The other model, on the side.<br>
+<a href="https://tjw.dev/side-piece">tjw.dev/side-piece</a></p>
+
+---
 
 Your coding agent is good. It is also the only opinion in the room. `side-piece` teaches it to hand work to a *different* model — Claude, Codex, Gemini, OpenCode — and collect the answer without losing its place.
 

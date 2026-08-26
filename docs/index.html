@@ -8,7 +8,12 @@
 <meta property="og:title" content="side-piece">
 <meta property="og:description" content="Your coding agent is good. It is also the only opinion in the room.">
 <meta property="og:url" content="https://tjw.dev/side-piece">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>🂡</text></svg>">
+<meta property="og:image" content="https://tjw.dev/side-piece/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root{
   --bg:#fbfaf8; --fg:#16150f; --dim:#6c675c; --line:#e2ded4;
@@ -33,12 +38,35 @@ body{
   font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 main{max-width:44rem;margin:0 auto;padding:clamp(3rem,10vw,6rem) 1.5rem 5rem}
+/* M3v: the mark is sized to the two-line text block. Its height is stated
+   explicitly rather than stretched — align-self:stretch plus aspect-ratio is
+   circular in a flex row, since the width it derives grows the row that sizes
+   it. 1.62em of the title's own clamp is the measured block height
+   (title line-box + gap + tagline line-box), so the two scale together. */
+.brand{display:flex;align-items:flex-start;gap:.85rem}
+.brand .mark{
+  flex:none;font-size:clamp(2rem,7vw,2.75rem);
+  height:1.62em;aspect-ratio:16/18;
+}
+.brand .mark svg{height:100%;width:100%;display:block;fill:var(--accent)}
+/* The tagline is set to the title's measured width. Both sizes now derive from
+   one clamp, so the ratio holds at every viewport; ~half the 6.7% deficit is
+   taken as tracking and the remainder by justifying the single line, which
+   also absorbs metric differences between platform UI fonts. */
+.brand-text{min-width:0;font-size:clamp(2rem,7vw,2.75rem)}
 h1{
-  font-family:var(--mono);font-size:clamp(2rem,7vw,2.75rem);font-weight:600;
-  letter-spacing:-.03em;margin:0;
+  font-family:var(--mono);font-size:1em;font-weight:600;
+  letter-spacing:-.03em;margin:0;line-height:1.05;
 }
 h1 .suit{color:var(--accent)}
-.tag{color:var(--dim);font-size:1.125rem;margin:.4rem 0 0}
+.tag{
+  color:var(--dim);font-size:.409em;line-height:1.3;
+  letter-spacing:.019em;text-align:justify;text-align-last:justify;
+  /* M0: the mono "s" carries a 0.068em left bearing, the sans "T" carries none,
+     so flush boxes leave the ink 3px apart. 1/6em of the tagline is that 3px,
+     and stays exact because both sizes derive from one clamp. */
+  margin:.1em 0 0 .1667em;
+}
 .lede{margin:2.25rem 0 1rem;font-size:1.1875rem;line-height:1.5;letter-spacing:-.01em}
 .lede em{color:var(--fg);font-style:italic}
 h2{
@@ -88,14 +116,30 @@ dd{margin:0;color:var(--dim)}
 
 footer{
   border-top:1px solid var(--line);margin-top:4rem;padding-top:1.25rem;
-  color:var(--dim);font-size:.875rem;display:flex;gap:1.25rem;flex-wrap:wrap;
+  color:var(--dim);font-size:.875rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;
 }
+footer a{
+  display:inline-flex;align-items:center;gap:.4em;
+  border-bottom:0;color:var(--dim);transition:color .15s;
+}
+footer a:hover{color:var(--fg)}
+footer svg{
+  width:1em;height:1em;flex:none;fill:currentColor;display:block;
+}
+/* M2 overshoot: the round GitHub mark reads smaller than npm's filled square
+   at an identical box, so it takes a 3% lift to match optical weight. */
+footer .gh svg{width:1.03em;height:1.03em}
 </style>
 </head>
 <body>
 <main>
-  <h1>side<span class="suit">·</span>piece</h1>
-  <p class="tag">The other model, on the side.</p>
+  <header class="brand">
+    <span class="mark"><svg viewBox="4 3 16 18" aria-hidden="true"><rect x="4" y="3" width="8" height="18" rx="2"/><rect x="15" y="8" width="5" height="13" rx="2"/></svg></span>
+    <div class="brand-text">
+      <h1>side<span class="suit">·</span>piece</h1>
+      <p class="tag">The other model, on the side.</p>
+    </div>
+  </header>
 
   <p class="lede">Your coding agent is good. It is also the only opinion in the room.</p>
   <p><strong>side-piece</strong> hands work to a different model — a review, a migration, a second read on the thing you are not sure about — and brings the answer back.</p>
@@ -145,8 +189,8 @@ ask mimo to try the migration in a worktree</code></pre>
   </dl>
 
   <footer>
-    <a href="https://github.com/thejustinwalsh/side-piece">GitHub</a>
-    <a href="https://www.npmjs.com/package/@tjw.dev/side-piece">npm</a>
+    <a class="gh" href="https://github.com/thejustinwalsh/side-piece"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
+    <a class="npm" href="https://www.npmjs.com/package/@tjw.dev/side-piece"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>npm</a>
     <span>MIT © Justin Walsh</span>
   </footer>
 </main>
